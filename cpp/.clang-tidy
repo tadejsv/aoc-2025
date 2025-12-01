@@ -1,0 +1,15 @@
+Checks: >
+  -*,
+  clang-diagnostic-*,
+  clang-analyzer-*,
+  bugprone-*,
+  cppcoreguidelines-*,
+  modernize-*,
+  readability-*,
+  performance-*,
+  -readability-identifier-length,
+  -readability-math-missing-parentheses
+HeaderFilterRegex: '(utils/*|day*)'
+SystemHeaders: false
+CheckOptions:
+    bugprone-exception-escape.IgnoredExceptions: main,

@@ -1,0 +1,9 @@
+{
+    "clangd.path": "cpp/.pixi/envs/default/bin/clangd",
+    "clangd.inactiveRegions.useBackgroundHighlight": false,
+    "clangd.arguments": [
+        "--compile-commands-dir=cpp/build/debug"
+    ],
+    "cmake.cmakePath": "/home/tadej/projects/aoc-2025/cpp/.pixi/envs/default/bin/cmake",
+    "cmake.configureOnOpen": false
+}
