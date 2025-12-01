@@ -15,21 +15,21 @@ main() {  // NOLINT
     int32_t count{ 0 };
     for (const auto& line : lines) {
         const auto dir{ line[0] };
-        int32_t turn = std::stoi(line.substr(1, line.size()));
+        int32_t turn = std::stoi(line.substr(1));
         if (dir == 'L') {
             turn = -turn;
         }
+        position += turn;
 
         if (turn > 0) {
-            count += (prev_pos + turn) / 100;
+            count += (position) / 100;
         } else {
-            count += std::abs((prev_pos + turn - 100) / 100);
+            count += std::abs((position - 100) / 100);
             if (prev_pos == 0) {
                 count = std::max(0, count - 1);
             }
         }
 
-        position += turn;
         position %= 100;
         position = (position + 100) % 100;
 

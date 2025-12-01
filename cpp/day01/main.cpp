@@ -27,7 +27,6 @@ main() {  // NOLINT
             position += 100;
         }
 
-
         if (position == 0) {
             ++count;
         }
