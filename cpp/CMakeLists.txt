@@ -11,3 +11,4 @@ target_compile_features(compiler_flags INTERFACE cxx_std_23)
 add_subdirectory(utils)
 
 add_subdirectory(day01)
+add_subdirectory(day02)

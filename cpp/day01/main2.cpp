@@ -22,11 +22,11 @@ main() {  // NOLINT
         position += turn;
 
         if (turn > 0) {
-            count += (position) / 100;
+            count += position / 100;
         } else {
-            count += std::abs((position - 100) / 100);
+            count += std::abs(position - 100) / 100;
             if (prev_pos == 0) {
-                count = std::max(0, count - 1);
+                --count;
             }
         }
 

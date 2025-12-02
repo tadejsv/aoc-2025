@@ -10,11 +10,10 @@ main() {  // NOLINT
     const auto& lines{ utils::read_lines_from_file("day1.txt") };
 
     int32_t position{ 50 };
-
     int32_t count{ 0 };
     for (const auto& line : lines) {
         const auto dir{ line[0] };
-        const int32_t turn = std::stoi(line.substr(1, line.size()));
+        const int32_t turn = std::stoi(line.substr(1));
 
         if (dir == 'L') {
             position -= turn;
@@ -23,9 +22,7 @@ main() {  // NOLINT
         }
 
         position %= 100;
-        if (position < 0) {
-            position += 100;
-        }
+        position = (position + 100) % 100;
 
         if (position == 0) {
             ++count;
