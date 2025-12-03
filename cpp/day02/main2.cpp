@@ -6,15 +6,6 @@
 
 #include "utils/utils.h"
 
-constexpr auto
-pow10(size_t n) -> int64_t {
-    int64_t result = 1;
-    while (n-- > 0) {
-        result *= 10;
-    }
-    return result;
-}
-
 auto
 repeat_num(int64_t num, size_t times) -> int64_t {
     std::string num_str{ std::to_string(num) };
@@ -41,10 +32,11 @@ get_repeating_nums(
 
         const size_t rep{ num.size() / i };
         const auto p1{ num.substr(0, i) };
-        const int64_t ppow{ pow10(p1.size()) };
-        for (int64_t num_part{ std::stoll(p1) }; num_part >= ppow / 10 && num_part < ppow;
-             num_part += incr) {
+        for (int64_t num_part{ std::stoll(p1) };; num_part += incr) {
             const auto new_num{ repeat_num(num_part, rep) };
+            if ((go_up && new_num > n2) || (!go_up && new_num < n1)) {
+                break;
+            }
             if (new_num > n2 || new_num < n1) {
                 continue;
             }
