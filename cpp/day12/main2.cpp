@@ -37,8 +37,8 @@ search_paths(const Path& path, Graph& graph, std::unordered_map<std::string, int
         total += search_paths(
             {
                 .current = neighbor,
-                .visited_dac = path.visited_dac || (neighbor == "dac"),
-                .visited_fft = path.visited_fft || (neighbor == "fft"),
+                .visited_dac = path.visited_dac || (path.current == "dac"),
+                .visited_fft = path.visited_fft || (path.current == "fft"),
             },
             graph,
             memo
