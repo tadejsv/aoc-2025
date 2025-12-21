@@ -8,6 +8,9 @@ project(AOC2024
 add_library(compiler_flags INTERFACE)
 target_compile_features(compiler_flags INTERFACE cxx_std_23)
 
+# 3rd party dependencies
+find_package(Eigen3 5.0.1 REQUIRED NO_MODULE)
+
 add_subdirectory(utils)
 
 add_subdirectory(day01)
@@ -17,3 +20,6 @@ add_subdirectory(day04)
 add_subdirectory(day05)
 add_subdirectory(day06)
 add_subdirectory(day07)
+add_subdirectory(day08)
+add_subdirectory(day09)
+add_subdirectory(day10)

@@ -36,3 +36,5 @@
 *.egg-info
 
 build
+
+external/installed
