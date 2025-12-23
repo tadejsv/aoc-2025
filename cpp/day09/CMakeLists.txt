@@ -1,5 +1,5 @@
-add_executable(Day9 main.cpp)
-# add_executable(Day9 main2.cpp)
+# add_executable(Day9 main.cpp)
+add_executable(Day9 main2.cpp)
 
 target_link_libraries(Day9 PUBLIC compiler_flags utils)
 

@@ -1,101 +1,76 @@
-#include <algorithm>
-#include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <print>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "utils/utils.h"
 
-struct Dist {
-    float dist{};
-    size_t from{};
-    size_t to{};
-};
+using Point = std::pair<int64_t, int64_t>;
+using Edge = std::pair<Point, Point>;
 
 auto
-find_root(const size_t node, std::unordered_map<size_t, size_t>& roots) -> size_t {
-    size_t root{ node };
-    while (true) {
-        const auto new_root{ roots[root] };
-        if (new_root == root) {
-            break;
+rect_area(const Point& point1, const Point& point2) -> int64_t {
+    return (std::abs(point1.first - point2.first) + 1)
+           * (std::abs(point1.second - point2.second) + 1);
+}
+
+auto
+valid_rect(const Point& p1, const Point& p2, const std::vector<Edge>& shape) -> bool {
+    const int64_t minX = std::min(p1.first, p2.first);
+    const int64_t maxX = std::max(p1.first, p2.first);
+    const int64_t minY = std::min(p1.second, p2.second);
+    const int64_t maxY = std::max(p1.second, p2.second);
+
+    for (const auto& e : shape) {
+        const auto& a = e.first;
+        const auto& b = e.second;
+
+        const int64_t eMinX = std::min(a.first, b.first);
+        const int64_t eMaxX = std::max(a.first, b.first);
+        const int64_t eMinY = std::min(a.second, b.second);
+        const int64_t eMaxY = std::max(a.second, b.second);
+
+        // Same strict overlap test as in your Go code:
+        // minX < eMaxX && maxX > eMinX && minY < eMaxY && maxY > eMinY
+        const bool overlaps = (minX < eMaxX) && (maxX > eMinX) && (minY < eMaxY) && (maxY > eMinY);
+
+        if (overlaps) {
+            return false;
         }
-        root = new_root;
-    }
-    return root;
-};
-
-auto
-join(
-    const size_t i,
-    const size_t j,
-    std::unordered_map<size_t, size_t>& roots,
-    std::unordered_map<size_t, int32_t>& sizes
-) -> int32_t {
-    auto ri{ find_root(i, roots) };
-    auto rj{ find_root(j, roots) };
-
-    if (ri == rj) {
-        return sizes[ri];
     }
 
-    roots[rj] = ri;
-    sizes[ri] += sizes[rj];
-    return sizes[ri];
+    return true;
 }
 
 int
 main() {  // NOLINT
-
-    const auto lines{ utils::read_lines_from_file("day8.txt") };
-    std::vector<std::array<int64_t, 3>> points{};
+    const auto lines{ utils::read_lines_from_file("day9.txt") };
+    std::vector<Point> points{};
 
     for (const auto& line : lines) {
         const auto parts{ utils::split_string(line, ",") };
-        points.push_back({ std::stoll(parts[0]), std::stoll(parts[1]), std::stoll(parts[2]) });
+        points.emplace_back(std::stoll(parts[0]), std::stoll(parts[1]));
     }
 
-    std::vector<Dist> dists{};
+    std::vector<Edge> shape{};
+    for (size_t i{ 0 }; i < points.size() - 1; ++i) {
+        shape.emplace_back(points[i], points[i + 1]);
+    }
+    shape.emplace_back(points[points.size() - 1], points[0]);
 
+    int64_t max_area{ 0 };
     for (size_t i{ 0 }; i < points.size(); ++i) {
         for (size_t j{ i + 1 }; j < points.size(); ++j) {
-            const std::array<int64_t, 3>& p1{ points[i] };
-            const std::array<int64_t, 3>& p2{ points[j] };
-
-            float dist = std::sqrt(
-                static_cast<float>(
-                    (p1.at(0) - p2.at(0)) * (p1.at(0) - p2.at(0))
-                    + (p1.at(1) - p2.at(1)) * (p1.at(1) - p2.at(1))
-                    + (p1.at(2) - p2.at(2)) * (p1.at(2) - p2.at(2))
-                )
-            );
-
-            dists.emplace_back(dist, i, j);
+            const auto area = rect_area(points[i], points[j]);
+            if (area > max_area) {
+                if (valid_rect(points[i], points[j], shape)) {
+                    max_area = area;
+                }
+            }
         }
     }
 
-    std::ranges::sort(dists, [](const Dist& a, const Dist& b) -> bool { return a.dist < b.dist; });
-
-    std::unordered_map<size_t, size_t> roots{};
-    std::unordered_map<size_t, int32_t> sizes{};
-    for (size_t i{ 0 }; i < points.size(); ++i) {
-        roots[i] = i;
-        sizes[i] = 1;
-    }
-
-    int64_t result{ 0 };
-    for (const auto& dist : dists) {
-        const auto join_size = join(dist.from, dist.to, roots, sizes);
-
-        if (join_size == points.size()) {
-            result = points[dist.to].at(0) * points[dist.from].at(0);
-            break;
-        }
-    }
-
-    std::println("{}", result);
+    std::println("{}", max_area);
 }
